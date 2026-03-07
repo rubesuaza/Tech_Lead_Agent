@@ -1,0 +1,36 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-9.0.2, pluggy-1.6.0 -- /root/agent_code_generator/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /root/agent_code_generator/workspaces_ruben_suaza/AgentV1/Tech_Lead_Agent
+configfile: pyproject.toml
+testpaths: tests
+plugins: langsmith-0.6.6, mock-3.15.1, asyncio-1.3.0, anyio-3.7.1, cov-7.0.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 24 items
+
+tests/test_path_debug.py::test_sys_path PASSED                           [  4%]
+tests/unit_application/test_ports.py::TestProjectQueryUseCase::test_interface_has_required_methods PASSED [  8%]
+tests/unit_application/test_ports.py::TestProjectQueryUseCase::test_concrete_implementation_can_be_instantiated PASSED [ 12%]
+tests/unit_application/test_ports.py::TestProjectRepository::test_interface_has_required_methods PASSED [ 16%]
+tests/unit_application/test_ports.py::TestProjectRepository::test_concrete_implementation_can_be_instantiated PASSED [ 20%]
+tests/unit_domain/test_exceptions.py::TestProjectNotFoundException::test_raises_with_default_message PASSED [ 25%]
+tests/unit_domain/test_exceptions.py::TestProjectNotFoundException::test_raises_with_custom_message_and_project_id PASSED [ 29%]
+tests/unit_domain/test_exceptions.py::TestIncompleteMetadataException::test_raises_with_default_message PASSED [ 33%]
+tests/unit_domain/test_exceptions.py::TestIncompleteMetadataException::test_raises_with_custom_message PASSED [ 37%]
+tests/unit_domain/test_project_master.py::TestProjectMaster::test_creation_with_required_attributes PASSED [ 41%]
+tests/unit_domain/test_project_master.py::TestProjectMaster::test_invalid_when_estructura_directorios_is_none_raises PASSED [ 45%]
+tests/unit_domain/test_project_master.py::TestProjectMaster::test_immutability PASSED [ 50%]
+tests/unit_domain/test_project_master.py::TestProjectMaster::test_lista_casos_uso_holds_use_case_objects PASSED [ 54%]
+tests/unit_domain/test_value_objects.py::TestUseCase::test_creation_with_required_attributes PASSED [ 58%]
+tests/unit_domain/test_value_objects.py::TestUseCase::test_immutability PASSED [ 62%]
+tests/unit_domain/test_value_objects.py::TestUseCase::test_equality_by_value PASSED [ 66%]
+tests/unit_domain/test_value_objects.py::TestInfrastructureSpecs::test_creation_with_lists PASSED [ 70%]
+tests/unit_domain/test_value_objects.py::TestInfrastructureSpecs::test_immutability PASSED [ 75%]
+tests/unit_domain/test_value_objects.py::TestInfrastructureSpecs::test_stores_sequences_as_tuples PASSED [ 79%]
+tests/unit_infrastructure/test_mappers.py::TestRowToProjectMaster::test_maps_full_row_to_project_master PASSED [ 83%]
+tests/unit_infrastructure/test_mappers.py::TestRowToProjectMaster::test_estructura_directorios_required_for_domain_invariant PASSED [ 87%]
+tests/unit_infrastructure/test_mappers.py::TestRowToProjectMaster::test_missing_estructura_directorios_raises_incomplete_metadata PASSED [ 91%]
+tests/unit_infrastructure/test_postgres_repository.py::TestPostgresProjectRepository::test_implements_project_repository_port PASSED [ 95%]
+tests/unit_infrastructure/test_postgres_repository.py::TestPostgresProjectRepository::test_has_find_all_and_find_by_id PASSED [100%]
+
+============================== 24 passed in 0.50s ==============================
