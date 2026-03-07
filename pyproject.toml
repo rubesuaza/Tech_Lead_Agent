@@ -16,6 +16,7 @@ fastapi = ">=0.110.0"
 uvicorn = { extras = ["standard"], version = "*" }
 pydantic = ">=2.0"
 pydantic-settings = "*"
+psycopg = { extras = ["binary"], version = "*" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"

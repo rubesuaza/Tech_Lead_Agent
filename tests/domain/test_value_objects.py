@@ -4,8 +4,11 @@ import sys
 from pathlib import Path
 
 _src = Path(__file__).resolve().parents[2] / "src"
-if _src.exists() and str(_src) not in sys.path:
-    sys.path.insert(0, str(_src))
+if _src.exists():
+    _src_str = str(_src)
+    if _src_str in sys.path:
+        sys.path.remove(_src_str)
+    sys.path.insert(0, _src_str)
 
 import pytest
 

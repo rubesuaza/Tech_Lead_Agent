@@ -7,11 +7,13 @@ from pathlib import Path
 _root = Path(__file__).resolve().parent
 _src = _root / "src"
 _src_str = str(_src)
-if _src.exists() and _src_str not in sys.path:
+if _src.exists():
+    while _src_str in sys.path:
+        sys.path.remove(_src_str)
     sys.path.insert(0, _src_str)
 
 
 def pytest_configure(config):
-    """Run path setup as early as possible during pytest startup."""
+    """Re-apply path setup during pytest startup (if needed)."""
     if _src.exists() and _src_str not in sys.path:
         sys.path.insert(0, _src_str)

@@ -6,8 +6,11 @@ from pathlib import Path
 
 # tests/application/test_*.py -> parents[2] = project root
 _src = Path(__file__).resolve().parents[2] / "src"
-if _src.exists() and str(_src) not in sys.path:
-    sys.path.insert(0, str(_src))
+if _src.exists():
+    _src_str = str(_src)
+    if _src_str in sys.path:
+        sys.path.remove(_src_str)
+    sys.path.insert(0, _src_str)
 
 import pytest
 
