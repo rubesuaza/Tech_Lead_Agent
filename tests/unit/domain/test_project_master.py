@@ -40,6 +40,12 @@ class TestProjectMasterInvariants:
             )
         assert "estructura_directorios" in exc_info.value.missing_field or "estructura" in str(exc_info.value).lower()
 
+    def test_raises_when_estructura_directorios_whitespace_only(self):
+        with pytest.raises(IncompleteMetadataException):
+            ProjectMaster(
+                **_valid_project_master_kwargs(estructura_directorios="   \t  ")
+            )
+
     def test_raises_when_reglas_dominio_empty(self):
         with pytest.raises(IncompleteMetadataException):
             ProjectMaster(
@@ -50,6 +56,12 @@ class TestProjectMasterInvariants:
         with pytest.raises(IncompleteMetadataException):
             ProjectMaster(
                 **_valid_project_master_kwargs(reglas_dominio=None)  # type: ignore
+            )
+
+    def test_raises_when_reglas_dominio_whitespace_only(self):
+        with pytest.raises(IncompleteMetadataException):
+            ProjectMaster(
+                **_valid_project_master_kwargs(reglas_dominio="   ")
             )
 
     def test_raises_when_coding_standards_empty(self):
