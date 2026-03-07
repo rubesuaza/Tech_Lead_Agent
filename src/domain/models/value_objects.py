@@ -25,8 +25,9 @@ class InfrastructureSpecs:
     messaging: tuple[str, ...]
 
 
-def _require_non_empty(value: str, field_name: str) -> None:
-    if not value or not value.strip():
+def _require_non_empty(value: str | None, field_name: str) -> None:
+    """Validates non-empty string; accepts None for consistent error handling (aligns with ProjectMaster)."""
+    if value is None or not str(value).strip():
         raise IncompleteMetadataException(field_name)
 
 
