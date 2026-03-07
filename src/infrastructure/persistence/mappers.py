@@ -1,6 +1,7 @@
 """
 Mappers: translate DB rows (external) to domain models (internal).
 No business logic; only data shape conversion.
+Adapter-style mapper for Repository use.
 """
 
 import json
@@ -9,6 +10,13 @@ from typing import Any
 
 from domain.models import ProjectMaster
 from domain.models.value_objects import UseCase
+
+
+class ProjectMasterMapper:
+    """Adapter: maps persistence row dicts to domain ProjectMaster. Single responsibility."""
+
+    def to_domain(self, row: dict[str, Any]) -> ProjectMaster:
+        return row_to_project_master(row)
 
 
 def row_to_project_master(row: dict[str, Any]) -> ProjectMaster:
@@ -98,18 +106,12 @@ def _to_use_cases(value: Any) -> tuple[UseCase, ...]:
             return ()
     if not isinstance(value, (list, tuple)):
         return ()
-    result: list[UseCase] = []
-    for item in value:
-        if isinstance(item, UseCase):
-            result.append(item)
-        elif isinstance(item, dict):
-            result.append(
-                UseCase(
-                    code=str(item.get("code", "")),
-                    title=str(item.get("title", "")),
-                    complexity=str(item.get("complexity", "")),
-                )
-            )
-        else:
-            continue
-    return tuple(result)
+    return tuple(
+        item if isinstance(item, UseCase) else UseCase(
+            code=str(item.get("code", "")),
+            title=str(item.get("title", "")),
+            complexity=str(item.get("complexity", "")),
+        )
+        for item in value
+        if isinstance(item, (UseCase, dict))
+    )

@@ -3,7 +3,7 @@ Dependency injection wiring for FastAPI.
 Provides factory functions for use with Depends().
 """
 
-from application.ports.output.project_repository import ProjectRepository
+from domain.ports.project_repository import ProjectRepository
 from infrastructure.config import DatabaseSettings
 from infrastructure.persistence.postgres_project_repository import PostgresProjectRepository
 

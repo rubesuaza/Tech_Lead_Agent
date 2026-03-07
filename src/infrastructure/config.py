@@ -7,7 +7,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class DatabaseSettings(BaseSettings):
-    """PostgreSQL connection settings from env."""
+    """
+    PostgreSQL connection settings from env.
+    Defaults enforce connection via Cloud SQL Auth Proxy (localhost:5432).
+    Set DB_HOST=127.0.0.1 and DB_PORT=5432 when using the proxy.
+    """
 
     model_config = SettingsConfigDict(
         env_prefix="DB_",
@@ -16,7 +20,7 @@ class DatabaseSettings(BaseSettings):
         extra="ignore",
     )
 
-    host: str = "localhost"
+    host: str = "127.0.0.1"
     port: int = 5432
     name: str = "tech_lead_agent"
     user: str = ""

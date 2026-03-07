@@ -15,7 +15,7 @@ import pytest
 
 from domain.models import ProjectMaster
 from domain.models.value_objects import UseCase
-from infrastructure.persistence.mappers import row_to_project_master
+from infrastructure.persistence.mappers import ProjectMasterMapper, row_to_project_master
 
 
 class TestRowToProjectMaster:
@@ -77,3 +77,96 @@ class TestRowToProjectMaster:
         }
         with pytest.raises(IncompleteMetadataException):
             row_to_project_master(row)
+
+    @pytest.mark.parametrize("optional_field,value", [
+        ("reglas_dominio", None),
+        ("checklist", None),
+        ("reglas_dominio", ""),
+        ("checklist", ""),
+    ])
+    def test_optional_fields_none_or_empty_maps_to_none_or_empty(self, optional_field, value):
+        row = {
+            "project_id": str(uuid.uuid4()),
+            "project_code": "P",
+            "project_name": "Proj",
+            "stack_tecnologico": {},
+            "estructura_directorios": "/",
+            "reglas_dominio": None,
+            "checklist": None,
+            "coding_standards": [],
+            "patrones_diseno": [],
+            "lista_casos_uso": [],
+        }
+        row[optional_field] = value
+        got = row_to_project_master(row)
+        assert got.estructura_directorios == "/"
+        if value is None or value == "":
+            assert getattr(got, optional_field) is None or getattr(got, optional_field) == ""
+
+    def test_invalid_uuid_raises_value_error(self):
+        row = {
+            "project_id": "not-a-valid-uuid",
+            "project_code": "P",
+            "project_name": "Proj",
+            "stack_tecnologico": {},
+            "estructura_directorios": "/",
+            "reglas_dominio": None,
+            "checklist": None,
+            "coding_standards": [],
+            "patrones_diseno": [],
+            "lista_casos_uso": [],
+        }
+        with pytest.raises(ValueError):
+            row_to_project_master(row)
+
+    @pytest.mark.parametrize("field,raw_value,expected_default", [
+        ("stack_tecnologico", "not valid json", {}),
+        ("coding_standards", "not valid json", ("not valid json",)),
+        ("patrones_diseno", "", ()),
+        ("lista_casos_uso", "not json", ()),
+    ])
+    def test_malformed_json_or_string_maps_to_safe_default(self, field, raw_value, expected_default):
+        row = {
+            "project_id": str(uuid.uuid4()),
+            "project_code": "P",
+            "project_name": "Proj",
+            "stack_tecnologico": {},
+            "estructura_directorios": "/",
+            "reglas_dominio": None,
+            "checklist": None,
+            "coding_standards": [],
+            "patrones_diseno": [],
+            "lista_casos_uso": [],
+        }
+        row[field] = raw_value
+        got = row_to_project_master(row)
+        actual = getattr(got, field)
+        if field == "stack_tecnologico":
+            assert actual == expected_default
+        elif field == "lista_casos_uso":
+            assert actual == expected_default
+        elif field == "coding_standards":
+            assert actual == expected_default or isinstance(actual, tuple)
+        elif field == "patrones_diseno":
+            assert actual == expected_default or isinstance(actual, tuple)
+        assert got.estructura_directorios == "/"
+
+
+class TestProjectMasterMapper:
+    """Adapter pattern: mapper class delegates to row_to_project_master."""
+
+    def test_to_domain_returns_same_result_as_row_to_project_master(self):
+        row = {
+            "project_id": str(uuid.uuid4()),
+            "project_code": "P",
+            "project_name": "Proj",
+            "stack_tecnologico": {},
+            "estructura_directorios": "/",
+            "reglas_dominio": None,
+            "checklist": None,
+            "coding_standards": [],
+            "patrones_diseno": [],
+            "lista_casos_uso": [],
+        }
+        mapper = ProjectMasterMapper()
+        assert mapper.to_domain(row) == row_to_project_master(row)

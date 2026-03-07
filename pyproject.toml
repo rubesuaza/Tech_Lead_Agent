@@ -17,6 +17,7 @@ uvicorn = { extras = ["standard"], version = "*" }
 pydantic = ">=2.0"
 pydantic-settings = "*"
 psycopg = { extras = ["binary"], version = "*" }
+sqlalchemy = ">=2.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
